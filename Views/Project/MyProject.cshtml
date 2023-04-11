@@ -1,0 +1,74 @@
+﻿@{
+}
+@model List<ProjectModel>;
+
+@{
+	List<IssueModel> issueList = ViewBag.issueList;
+	int i = 0;
+}
+<div class="container">
+	<div class="row">
+		<div class="col-md-4 ">
+			<div class="text-start">
+				<a href="/Project/Add" class="btn btn-success">Create Project</a>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<!-- Orta bölüm -->
+		</div>
+		<div class="col-md-4">
+			<div class="text-end">
+				<a href="/Project/MyProject" class="btn btn-primary">My Project</a>
+				<a href="/Project/AllProjects" class="btn btn-primary">All Projects</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-10">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Name</th>
+						<th scope="col">Auther</th>
+						<th scope="col">Time</th>
+						<th scope="col">Assigned Issue</th>
+						<th scope="col">Detail</th>
+						<th scope="col">Delete</th>
+					</tr>
+				</thead>
+				@foreach (var project in Model)
+				{
+					var assignedIssueToProject = issueList.Where(p => p.ProjectModelId == project.Id).ToList();
+
+					<tbody>
+						<tr>
+							<th scope="row">@(i = i + 1)</th>
+							<td>@project.Name</td>
+							<td>@project.Author</td>
+							<td>@project.Time.ToString("dd/MM/yyyy")</td>
+							<td>
+								@{
+									var issueNames = assignedIssueToProject.Select(issue => issue.Name).ToList();
+									string issueNamesString = string.Join(", ", issueNames);
+								}
+								@issueNamesString
+							</td>
+							<td>
+								<a href="/Project/Detail/@project.Id" class="btn btn-warning">Detail</a>
+							</td>
+							<td>
+								<a href="/Project/Delete/@project.Id" class="btn btn-danger">Delete</a>
+							</td>
+						</tr>
+					</tbody>
+				}
+			</table>
+		</div>
+
+	</div>
+</div>
+

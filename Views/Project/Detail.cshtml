@@ -1,0 +1,52 @@
+﻿@{
+	List<IssueModel> issueList = ViewBag.issueList;
+	int i = 0;
+}
+@model ProjectModel;
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-10">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Name</th>
+						<th scope="col">Auther</th>
+						<th scope="col">Time</th>
+						<th scope="col">Assigned Issue</th>
+						<th scope="col">Detail</th>
+						<th scope="col">Delete</th>
+					</tr>
+				</thead>
+
+				@{
+					var assignedIssueToProject = issueList.Where(p => p.ProjectModelId == Model.Id).ToList();
+
+					<tbody>
+						<tr>
+							<th scope="row">@(i = i + 1)</th>
+							<td>@Model.Name</td>
+							<td>@Model.Author</td>
+							<td>@Model.Time.ToString("dd/MM/yyyy HH:mm")</td>
+							<td>
+								@{
+									var issueNames = assignedIssueToProject.Select(issue => issue.Name).ToList();
+									string issueNamesString = string.Join(", ", issueNames);
+								}
+								@issueNamesString
+							</td>
+							<td>
+								<a href="/Project/Update/@Model.Id" class="btn btn-warning">Update</a>
+							</td>
+							<td>
+								<a href="/Project/Delete/@Model.Id" class="btn btn-danger">Delete</a>
+							</td>
+						</tr>
+					</tbody>
+				}
+			</table>
+		</div>
+
+	</div>
+</div>

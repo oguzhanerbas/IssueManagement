@@ -1,0 +1,26 @@
+﻿@model ProjectModel;
+@{
+    DateTime currentTime = DateTime.Now;
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Update Project</h2>
+            <form method="post" action="/Project/Update/@Model.Id">
+                <input type="hidden" name="Id" value="@Model.Id">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" id="name" name="Name" value="@Model.Name">
+                </div>
+                <div class="form-group">
+                    <label for="author">Author:</label>
+                    <input type="text" class="form-control" id="author" name="Author" value="@Model.Author">
+                </div>
+
+                <input type="hidden" class="form-control" id="time" name="Time" value="@currentTime">
+
+                <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+        </div>
+    </div>
+</div>
