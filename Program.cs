@@ -25,7 +25,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
-// Authorize yaparken kullanýcý giriþ yapmadýysa otomatik dönülen yer.
+// Authorize yaparken kullanï¿½cï¿½ giriï¿½ yapmadï¿½ysa otomatik dï¿½nï¿½len yer.
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Identity/Account/Login";
