@@ -19,12 +19,12 @@ namespace IssueManagement.Business.Concrete
 			var result = _context.ProjectModels.FirstOrDefault(x => x.Id == project.Id);
 			if (result == null) 
 			{
-
-			}
+                _context.ProjectModels.Add(project);
+                _context.SaveChanges();
+            }
 			else
 			{
-				_context.ProjectModels.Add(project);
-				_context.SaveChanges();
+
 			}
 		}
 		public void Update(ProjectModel project)
@@ -53,6 +53,7 @@ namespace IssueManagement.Business.Concrete
 			else
 			{
 				_context.ProjectModels.Remove(project);
+				_context.SaveChanges();
 			}
 		}
 

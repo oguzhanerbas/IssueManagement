@@ -4,7 +4,7 @@ using IssueManagement.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace IssueManagement.Controllers
 {
@@ -16,7 +16,10 @@ namespace IssueManagement.Controllers
 		private readonly IIssueService _issueService;
 		private readonly UserManager<IdentityUser> _userManager;
 
-		public ProjectController(IProjectService projectService, ApplicationDbContext applicationDbContext, IIssueService issueService, UserManager<IdentityUser> userManager)
+
+
+        public ProjectController(IProjectService projectService, ApplicationDbContext applicationDbContext,
+			IIssueService issueService, UserManager<IdentityUser> userManager)
 		{
 			_projectService = projectService;
 			_context = applicationDbContext;
@@ -25,22 +28,20 @@ namespace IssueManagement.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> MyProject()
+		public async Task<IActionResult> AddProject()
 		{
-			var getProjectList = _projectService.GetAll();
-			ViewBag.issueList = _issueService.GetAll();
-			var user = await _userManager.GetUserAsync(HttpContext.User);
-			ViewBag.user = user;
-			return View(getProjectList);
+			// TODO: usersları çekmek için bunu kullanıyoruz.
+            // ViewBag.users = await _userManager.Users.ToListAsync(); 
+            ViewBag.user = await _userManager.GetUserAsync(HttpContext.User);
+            return View();
 		}
 
-		public async Task<IActionResult> AllProjects()
+		[HttpPost]
+		public async Task<IActionResult> AddProject(ProjectModel projectModel)
 		{
-            var getProjectList = _projectService.GetAll();
-            ViewBag.issueList = _issueService.GetAll();
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            ViewBag.user = user;
-            return View(getProjectList);
+            
+            _projectService.Add(projectModel);
+            return RedirectToAction("MyProject");
         }
 
 		[HttpGet]
@@ -67,13 +68,36 @@ namespace IssueManagement.Controllers
 			return RedirectToAction("MyProject");
 		}
 
-		[HttpDelete]
+		[HttpGet]
 		public async Task<IActionResult> Delete(int id)
 		{
+			var issues = _issueService.GetAll().Where(p=>p.Id == id);
+			foreach (var issue in issues)
+			{
+				_issueService.Remove(issue.Id);
+			}
 			_projectService.Remove(id);
-			return View();
-		}
+            return RedirectToAction("MyProject");
+        }
 
-		
-	}
+        [HttpGet]
+        public async Task<IActionResult> MyProject()
+        {
+            var getProjectList = _projectService.GetAll();
+            ViewBag.issueList = _issueService.GetAll();
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            ViewBag.user = user;
+			getProjectList = getProjectList.Where(p=>p.Author == user.UserName).ToList();
+            return View(getProjectList);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AllProjects()
+        {
+            var getProjectList = _projectService.GetAll();
+            ViewBag.issueList = _issueService.GetAll();
+            return View(getProjectList);
+        }
+
+    }
 }

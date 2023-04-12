@@ -1,25 +1,25 @@
-﻿@model ProjectModel;
-@{
+﻿@{
     DateTime currentTime = DateTime.Now;
+    var user = ViewBag.user;
 }
+@model ProjectModel;
 <div class="container">
     <div class="row">
         <div class="col-md-6">
             <h2>Update Project</h2>
-            <form method="post" action="/Project/Update">
-                <input type="hidden" name="Id" value="@Model.Id">
+            <form method="post" action="/Project/AddProject">
                 <div class="form-group">
                     <label for="name">Name:</label>
-                    <input type="text" class="form-control" id="name" name="Name" value="@Model.Name">
+                    <input type="text" class="form-control" id="name" name="Name" >
                 </div>
                 <div class="form-group">
                     <label for="author">Author:</label>
-                    <input type="text" class="form-control" id="author" name="Author" value="@Model.Author">
+                    <input type="text" class="form-control" id="author" name="Author" value="@user" readonly>
                 </div>
 
                 <input type="hidden" class="form-control" id="time" name="Time" value="@currentTime">
 
-                <button type="submit" class="btn btn-primary mt-3">Update</button>
+                <button type="submit" class="btn btn-primary mt-3">Create</button>
             </form>
         </div>
     </div>
