@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IssueManagement.Models
 {
@@ -10,13 +12,8 @@ namespace IssueManagement.Models
         [Required(ErrorMessage = "Issue Name Field is Required")]
         public string Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Author Field is Required")]
         public string Author { get; set; }
-
-
-        [Required(ErrorMessage = "Description Field is Required")]
-        public string Description { get; set; }
-
 
         [Required(ErrorMessage = "Assign Field is Required")]
         public string Assign { get; set; }
@@ -24,7 +21,11 @@ namespace IssueManagement.Models
         [Required]
         public DateTime Time { get; set; }
 
+        [Required(ErrorMessage = "Project Field is Required")]
         public int ProjectModelId { get; set; }
+
+        [NotMapped]
+        [ValidateNever]
         public ProjectModel ProjectModel { get; set; }
     }
 }

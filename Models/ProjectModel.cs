@@ -7,7 +7,7 @@ namespace IssueManagement.Models
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Issue Name Field is Required")]
+        [Required(ErrorMessage = "Project Name Field is Required")]
         public string Name { get; set; }
         [Required]
         public string Author { get; set; }

@@ -1,0 +1,72 @@
+﻿
+@{
+	var project = ViewBag.project;
+	List<CommentModel> comments = ViewBag.comments;
+	int i = 0;
+	DateTime currentTime = DateTime.Now;
+	var user = ViewBag.user;
+	var issue = ViewBag.issue;
+}
+@model CommentModel
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-4 ">
+			<div class="text-start">
+			</div>
+		</div>
+		<div class="col-md-4">
+			<!-- Orta bölüm -->
+		</div>
+		<div class="col-md-4">
+			<div class="text-end">
+				<a href="/Issue/MyIssues" class="btn btn-primary">My Issues</a>
+				<a href="/Issue/AllIssues" class="btn btn-primary">All Issues</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-10">
+			<label><b>Comments</b></label>
+			
+			@foreach (var comment in comments)
+			{
+				<hr />
+				<div class="col-md-10">
+					<p>@comment.Description</p>
+				</div>
+				<p class="text-end">@comment.Author / @comment.Time.ToString("dd/MM/yyyy HH:mm")</p>
+			}
+			@if (comments.Count == 0)
+			{
+				<p>There is no comment</p>
+			}
+		</div>
+	</div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post" action="/Issue/Detail">
+				<div class="form-group">
+					<label for="author">Comment:</label>
+					<input type="text" class="form-control" id="description" name="Description" value="Decsription">
+					<span asp-validation-for="Description" class="text-danger"></span>
+				</div>
+                <div class="form-group">
+                    <input type="hidden" class="form-control" id="author" name="Author" value="@user" readonly>
+                </div>
+
+                <input type="hidden" class="form-control" id="time" name="Time" value="@currentTime">
+
+				<input type="hidden" class="form-control" id="issueModelId" name="IssueModelId" value="@issue.Id">
+
+                <button type="submit" class="btn btn-primary mt-3">Add Comment</button>
+            </form>
+        </div>
+    </div>
+</div>

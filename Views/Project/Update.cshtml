@@ -9,12 +9,13 @@
             <form method="post" action="/Project/Update">
                 <input type="hidden" name="Id" value="@Model.Id">
                 <div class="form-group">
-                    <label for="name">Name:</label>
-                    <input type="text" class="form-control" id="name" name="Name" value="@Model.Name">
+                    <label asp-for="@Model.Name">Name</label>
+                    <input asp-for="@Model.Name" class="form-control" />
+                    <span asp-validation-for="@Model.Name" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label for="author">Author:</label>
-                    <input type="text" class="form-control" id="author" name="Author" value="@Model.Author">
+                    <input type="text" class="form-control" id="author" name="Author" value="@Model.Author" readonly>
                 </div>
 
                 <input type="hidden" class="form-control" id="time" name="Time" value="@currentTime">

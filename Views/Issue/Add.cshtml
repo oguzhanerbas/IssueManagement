@@ -1,0 +1,59 @@
+﻿@using Microsoft.AspNetCore.Identity;
+
+@{
+    // ISSUE ADD
+    DateTime currentTime = DateTime.Now;
+    var user = ViewBag.user;
+    List<ProjectModel> projects = ViewBag.projects;
+    ICollection <IdentityUser> users = ViewBag.users;
+}
+@model IssueModel
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Create Issue</h2>
+            <form method="post" action="/Issue/Add">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" id="name" name="Name">
+@*                    <label asp-for="Name">Name</label>
+                    <input asp-for="Name" class="form-control" />*@
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="author">Author:</label>
+                    <input type="text" class="form-control" id="author" name="Author" value="@user" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="project">Project:</label>
+                    <select class="form-control" id="project" name="ProjectModelId">
+                        <option value="">-- Select a project --</option>
+                        @foreach (var project in projects)
+                        {
+                            <option value="@project.Id">@project.Name</option>
+                            
+                        }
+                    </select>
+                    <span asp-validation-for="ProjectModelId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="assignedTo">Assigned to:</label>
+                    <select class="form-control" id="assign" name="Assign">
+                        <option value="">-- Select a user --</option>
+                        @foreach (var item in users)
+                        {
+                            <option value="@item.UserName">@item.UserName</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Assign" class="text-danger"></span>
+                </div>
+
+                <input type="hidden" class="form-control" id="time" name="Time" value="@currentTime">
+
+                <button type="submit" class="btn btn-primary mt-3">Create</button>
+            </form>
+        </div>
+    </div>
+</div>

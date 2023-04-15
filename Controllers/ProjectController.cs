@@ -31,41 +31,83 @@ namespace IssueManagement.Controllers
 		public async Task<IActionResult> AddProject()
 		{
 			// TODO: usersları çekmek için bunu kullanıyoruz.
-            // ViewBag.users = await _userManager.Users.ToListAsync(); 
+            ViewBag.users = await _userManager.Users.ToListAsync(); 
             ViewBag.user = await _userManager.GetUserAsync(HttpContext.User);
+			ViewBag.isValid = false;
             return View();
 		}
 
-		[HttpPost]
-		public async Task<IActionResult> AddProject(ProjectModel projectModel)
-		{
+        //[HttpPost]
+
+        //      public async Task<IActionResult> AddProject(ProjectModel projectModel)
+        //{
+        //          if (ModelState.IsValid)
+        //          {
+        //              _projectService.Add(projectModel);
+        //          }
+        //          else
+        //              ViewBag.HataVarMi = true;
+
+        //          return RedirectToAction("MyProject");
+        //      }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProject(ProjectModel projectModel)
+        {
+            if (ModelState.IsValid)
+            {
+                _projectService.Add(projectModel);
+                return RedirectToAction("MyProject");
+			}
+			else
+			{
+                ViewBag.users = await _userManager.Users.ToListAsync();
+                ViewBag.user = await _userManager.GetUserAsync(HttpContext.User);
+                ViewBag.isValid = true;
+			}
             
-            _projectService.Add(projectModel);
-            return RedirectToAction("MyProject");
+            return View();
         }
 
-		[HttpGet]
+        [HttpGet]
 		public async Task<IActionResult> Detail(int id)
 		{
-			var getProjectList = _projectService.GetAll();
 			ViewBag.issueList = _issueService.GetAll();
-			var user = await _userManager.GetUserAsync(HttpContext.User);
-			ViewBag.user = user;
 			var result = _projectService.Get(id);
 			return View(result);
 		}
 		[HttpGet]
 		public async Task<IActionResult> Update(int id)
 		{
-			var result = _projectService.Get(id);
+            ViewBag.users = await _userManager.Users.ToListAsync();
+            ViewBag.user = await _userManager.GetUserAsync(HttpContext.User);
+            var result = _projectService.Get(id);
 			return View(result);
 		}
+
+		//[HttpPost]
+		//public async Task<IActionResult> Update(ProjectModel projectModel)
+		//{
+		//	_projectService.Update(projectModel);
+		//	return RedirectToAction("MyProject");
+		//}
 
 		[HttpPost]
 		public async Task<IActionResult> Update(ProjectModel projectModel)
 		{
-			_projectService.Update(projectModel);
-			return RedirectToAction("MyProject");
+            if (ModelState.IsValid)
+            {
+                _projectService.Update(projectModel);
+                return RedirectToAction("MyProject");
+            }
+            else
+            {
+                ViewBag.users = await _userManager.Users.ToListAsync();
+                ViewBag.user = await _userManager.GetUserAsync(HttpContext.User);
+                var result = _projectService.Get(projectModel.Id);
+                return View(result);
+            }
+			
 		}
 
 		[HttpGet]
@@ -77,8 +119,11 @@ namespace IssueManagement.Controllers
 				_issueService.Remove(issue.Id);
 			}
 			_projectService.Remove(id);
-            return RedirectToAction("MyProject");
-        }
+			// Get the URL of the previous page
+			string previousUrl = Request.Headers["Referer"].ToString();
+			// Redirect the user to the previous page
+			return Redirect(previousUrl);
+		}
 
         [HttpGet]
         public async Task<IActionResult> MyProject()

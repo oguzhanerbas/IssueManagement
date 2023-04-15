@@ -4,6 +4,7 @@ using IssueManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IssueManagement.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230415074319_add_time_to_description")]
+    partial class add_time_to_description
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,23 +32,19 @@ namespace IssueManagement.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Author")
+                    b.Property<string>("description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("IssueModelId")
+                    b.Property<int>("issueModelId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Time")
+                    b.Property<DateTime>("time")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IssueModelId");
+                    b.HasIndex("issueModelId");
 
                     b.ToTable("DescriptionModels");
                 });
@@ -312,13 +310,13 @@ namespace IssueManagement.Data.Migrations
 
             modelBuilder.Entity("IssueManagement.Models.DescriptionModel", b =>
                 {
-                    b.HasOne("IssueManagement.Models.IssueModel", "IssueModel")
+                    b.HasOne("IssueManagement.Models.IssueModel", "issueModel")
                         .WithMany()
-                        .HasForeignKey("IssueModelId")
+                        .HasForeignKey("issueModelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("IssueModel");
+                    b.Navigation("issueModel");
                 });
 
             modelBuilder.Entity("IssueManagement.Models.IssueModel", b =>

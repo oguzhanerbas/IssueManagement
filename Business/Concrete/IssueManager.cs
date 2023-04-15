@@ -8,21 +8,23 @@ namespace IssueManagement.Business.Concrete
 	public class IssueManager : IIssueService
 	{
 		private readonly ApplicationDbContext _context;
-        public IssueManager(ApplicationDbContext applicationDbContext)
+		private readonly ICommentService _commentService;
+        public IssueManager(ApplicationDbContext applicationDbContext, ICommentService commentService)
         {
             _context = applicationDbContext;
+			_commentService = commentService;
         }
         public void Add(IssueModel issue)
 		{
 			var result = _context.IssueModels.FirstOrDefault(p=>p.Id == issue.Id);
 			if (result == null)
 			{
-
-			}
+                _context.IssueModels.Add(issue);
+                _context.SaveChanges();
+            }
 			else
 			{
-				_context.IssueModels.Add(result);
-				_context.SaveChanges();
+
 			}
 		}
 		public void Update(IssueModel issue)
@@ -34,12 +36,21 @@ namespace IssueManagement.Business.Concrete
 			}
 			else
 			{
-				_context.IssueModels.Update(result);
-				_context.SaveChanges();
-			}
+                result.Name = issue.Name;
+                result.Author = issue.Author;
+                result.Time = issue.Time;
+				result.Assign = issue.Assign;
+				result.ProjectModelId = issue.ProjectModelId;
+                _context.SaveChanges();
+            }
 		}
 		public void Remove(int id)
 		{
+			var comments = _commentService.GetAll().Where(p=>p.IssueModelId == id);
+			foreach (var comment in comments)
+			{
+				_commentService.Remove(comment.Id);
+			}
 			var result = _context.IssueModels.FirstOrDefault(p=> p.Id == id);
 			if (result == null)
 			{
